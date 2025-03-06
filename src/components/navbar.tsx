@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import SiteLogo from "@/assets/logo.svg";
@@ -9,7 +7,13 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
-const ActionButton = ({ label, variant = "primary", onClick }) => {
+interface ActionButtonProps {
+    label: string;
+    variant?: "primary" | "secondary";
+    onClick: () => void;
+}
+
+const ActionButton: React.FC<ActionButtonProps> = ({ label, variant = "primary", onClick }) => {
     return (
         <button
             onClick={onClick}

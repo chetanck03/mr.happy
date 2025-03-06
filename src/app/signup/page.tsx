@@ -164,7 +164,7 @@ export default function SignupPage() {
                   <p className="text-sm text-white/70">AI Assistant</p>
                 </div>
               </div>
-              <p className="text-white/90">"I'm here to help you be more productive and bring a smile to your face along the way!"</p>
+              <p className="text-white/90">I&apos;m here to help you be more productive and bring a smile to your face along the way!</p>
             </div>
           </div>
         </div>

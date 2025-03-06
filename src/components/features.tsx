@@ -41,9 +41,17 @@ const tabs = [
     },
 ];
 
-const FeatureTab = ({ selected, onClick, ...props }) => {
-    const tabRef = useRef(null);
-    const dotLottieRef = useRef(null);
+interface FeatureTabProps {
+    selected: boolean;
+    onClick: () => void;
+    icon: string;
+    title: string;
+    isNew?: boolean;
+}
+
+const FeatureTab = ({ selected, onClick, icon, title, isNew }: FeatureTabProps) => {
+    const tabRef = useRef<HTMLDivElement>(null);
+    const dotLottieRef = useRef<DotLottieCommonPlayer>(null);
 
     const xPercentage = useMotionValue(0);
     const yPercentage = useMotionValue(0);
@@ -64,10 +72,17 @@ const FeatureTab = ({ selected, onClick, ...props }) => {
             1,
         ];
 
-        const options = { times, duration: 5, repeat: Infinity, ease: "linear" };
-        animate(xPercentage, [0, 100, 100, 0, 0], options);
-        animate(yPercentage, [0, 0, 100, 100, 0], options);
-    }, [selected]);
+        const animateOptions: ValueAnimationTransition = {
+            times,
+            duration: 5,
+            repeat: Infinity,
+            ease: "linear",
+        };
+
+        animate(xPercentage, [0, 100, 100, 0, 0], animateOptions);
+        animate(yPercentage, [0, 0, 100, 100, 0], animateOptions);
+
+    }, [selected, xPercentage, yPercentage]); // ✅ Fixed missing dependencies
 
     const handleTabHover = () => {
         dotLottieRef.current?.seek(0);
@@ -86,10 +101,10 @@ const FeatureTab = ({ selected, onClick, ...props }) => {
             )}
 
             <div className="size-12 border border-muted rounded-lg flex items-center justify-center">
-                <DotLottiePlayer src={props.icon} className="size-5" autoplay ref={dotLottieRef} />
+                <DotLottiePlayer src={icon} className="size-5" autoplay ref={dotLottieRef} />
             </div>
-            <div className="font-medium">{props.title}</div>
-            {props.isNew && <div className="text-xs rounded-full text-white px-2 py-0.5 bg-[#8c44ff] font-semibold">New</div>}
+            <div className="font-medium">{title}</div>
+            {isNew && <div className="text-xs rounded-full text-white px-2 py-0.5 bg-[#8c44ff] font-semibold">New</div>}
         </div>
     );
 };
@@ -103,10 +118,10 @@ export function Features() {
     const backgroundPosition = useMotionTemplate`${backgroundPositionX}% ${backgroundPositionY}%`;
     const backgroundSize = useMotionTemplate`${backgroundSizeX}% auto`;
 
-    const handleSelectTab = (index) => {
+    const handleSelectTab = (index: number) => {
         setSelectedTab(index);
 
-        const animateOptions = { duration: 2, ease: "easeInOut" };
+        const animateOptions: ValueAnimationTransition = { duration: 2, ease: "easeInOut" };
         animate(backgroundSizeX, [backgroundSizeX.get(), 100, tabs[index].backgroundSizeX], animateOptions);
         animate(backgroundPositionX, [backgroundPositionX.get(), tabs[index].backgroundPositionX], animateOptions);
         animate(backgroundPositionY, [backgroundPositionY.get(), tabs[index].backgroundPositionY], animateOptions);
